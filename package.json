@@ -1,0 +1,10 @@
+{
+  "name": "protondb-millennium-plugin",
+  "version": "0.1.0",
+  "description": "ProtonDB plugin for Steam client via Millennium",
+  "main": "backend/main.py",
+  "author": "DemonKingSwarn",
+  "license": "GPL",
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -1,85 +1,27 @@
-@import url("https://cdn.jsdelivr.net/gh/SteamDatabase/BrowserExtension@latest/styles/community.css");
-@import url("https://cdn.jsdelivr.net/gh/SteamDatabase/BrowserExtension@latest/styles/global.css");
-@import url("https://cdn.jsdelivr.net/gh/SteamDatabase/BrowserExtension@latest/styles/store.css");
-
-/* ProtonDB badge container near the store game title or header */
-.protondb-badge-container {
-    display: inline-flex;
-    align-items: center;
-    margin-left: 8px;
-    vertical-align: middle;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: default;
-}
-
-/* Base ProtonDB badge style */
 .protondb-badge {
-    display: inline-block;
-    padding: 2px 8px;
-    margin-right: 6px;
-    border-radius: 12px;
-    font-size: 12px;
-    font-weight: 700;
-    color: white;
-    text-transform: uppercase;
-    user-select: none;
-    box-shadow: 0 0 4px rgba(0,0,0,0.3);
+  display: inline-block;
+  border-radius: 4px;
+  padding: 3px 8px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #fff;
+  background: #4b6baf;
+  vertical-align: middle;
+  margin-top: 4px;
 }
 
-/* ProtonDB compatibility tier badge colors - adjust as needed */
-.protondb-badge-platinum {
-    background-color: #4CAF50; /* bright green */
-}
+.protondb-badge.tier-platinum { background: #b4c7dc; color: #222; }
+.protondb-badge.tier-gold     { background: #cfb53b; color: #222; }
+.protondb-badge.tier-silver   { background: #c0c0c0; color: #222; }
+.protondb-badge.tier-bronze   { background: #cd7f32; color: #fff; }
+.protondb-badge.tier-borked   { background: #ff0000; color: #fff; }
 
-.protondb-badge-gold {
-    background-color: #FFD700; /* gold */
-    color: #000;
+.protondb-deck {
+  display: inline-block;
+  background: #171a21;
+  color: #67c1f5;
+  padding: 2px 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  margin-left: 8px;
 }
-
-.protondb-badge-silver {
-    background-color: #C0C0C0; /* silver/gray */
-    color: #000;
-}
-
-.protondb-badge-bronze {
-    background-color: #CD7F32; /* bronze */
-    color: #000;
-}
-
-.protondb-badge-broken {
-    background-color: #D32F2F; /* red */
-}
-
-/* Optional tooltip styling */
-.protondb-badge-container:hover .protondb-tooltip {
-    visibility: visible;
-    opacity: 1;
-    transition-delay: 0.2s;
-}
-
-.protondb-tooltip {
-    visibility: hidden;
-    opacity: 0;
-    background-color: rgba(0,0,0,0.75);
-    color: #fff;
-    text-align: left;
-    border-radius: 4px;
-    padding: 6px 10px;
-    font-size: 12px;
-    position: absolute;
-    z-index: 9999;
-    max-width: 240px;
-    margin-top: 6px;
-    pointer-events: none;
-    box-shadow: 0 2px 9px rgba(0,0,0,0.5);
-    white-space: normal;
-}
-
-/* Position tooltip near badge */
-.protondb-badge-container:hover .protondb-tooltip {
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-}
-

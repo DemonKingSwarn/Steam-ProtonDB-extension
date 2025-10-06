@@ -1,66 +1,40 @@
 import Millennium
 import PluginUtils  # type: ignore
 
-logger = PluginUtils.Logger()
-
 import json
 import os
 import shutil
 import requests
 
+logger = PluginUtils.Logger()
+
 WEBKIT_CSS_FILE = "protondb-webkit.css"
-CSS_ID = None
+
+PROTONDB_API_URL = "https://www.protondb.com/api/v1/reports/summaries/"
+
 DEFAULT_HEADERS = {
     'Accept': 'application/json',
-    'X-Requested-With': 'ProtonDB',
-    'User-Agent': 'https://github.com/Trsnaqe/ProtonDB-Community-Extension',
-    'Origin': 'https://github.com/Trsnaqe/ProtonDB-Community-Extension',
-    'Sec-Fetch-Dest': 'empty',
-    'Sec-Fetch-Mode': 'cors',
-    'Sec-Fetch-Site': 'cross-site',
+    'User-Agent': 'Steam-ProtonDB-Millennium-Plugin'
 }
-
-API_URL = 'https://protondb-community-api-04f42bc1742f.herokuapp.com/api'
-
-class Logger:
-    @staticmethod
-    def warn(message: str) -> None:
-        logger.warn(message)
-
-    @staticmethod
-    def error(message: str) -> None:
-        logger.error(message)
 
 def GetPluginDir():
     return os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), '..', '..'))
 
-def Request(path: str, params: dict = None) -> str:
-    url = f"{API_URL.rstrip('/')}/{path.lstrip('/')}"
+def Request(url: str) -> str:
     response = None
     try:
-        response = requests.get(url, params=params or {}, headers=DEFAULT_HEADERS, timeout=10)
+        response = requests.get(url, headers=DEFAULT_HEADERS)
         response.raise_for_status()
         return response.text
     except Exception as error:
         return json.dumps({
             'success': False,
-            'error': str(error) + ' ' + (response.text if response is not None else 'No response')
+            'error': str(error) + ' ' + (response.text if response else 'No response')
         })
 
-def GetGameSummary(appid: int, contentScriptQuery: str) -> str:
-    logger.log(f"Getting ProtonDB summary for app {appid}")
-    return Request(f"games/{int(appid)}/summary")
-
-def GetGameReports(appid: int, contentScriptQuery: str, versioned: bool = False) -> str:
-    logger.log(f"Getting ProtonDB reports for app {appid} (versioned={versioned})")
-    res = Request(f"reports/{int(appid)}", {'versioned': 'true' if versioned else 'false'})
-    try:
-        parsed = json.loads(res)
-        if isinstance(parsed, dict) and parsed.get('success') is False:
-            return Request(f"games/{int(appid)}/reports", {'versioned': 'true' if versioned else 'false'})
-    except Exception:
-        pass
-    return res
+def GetProtonDBSummary(appid: int) -> str:
+    logger.log(f"Getting ProtonDB summary for {appid}")
+    return Request(f"{PROTONDB_API_URL}{appid}.json")
 
 class Plugin:
     def copy_webkit_files(self):
@@ -74,11 +48,7 @@ class Plugin:
         except Exception as e:
             logger.error(f"Failed to copy webkit file, {e}")
 
-        global CSS_ID
-        try:
-            CSS_ID = Millennium.add_browser_css(os.path.join("ProtonDB", WEBKIT_CSS_FILE))
-        except Exception as e:
-            logger.error(f"Failed to register browser css: {e}")
+        Millennium.add_browser_css(os.path.join("ProtonDB", WEBKIT_CSS_FILE))
 
     def _front_end_loaded(self):
         self.copy_webkit_files()
@@ -89,10 +59,4 @@ class Plugin:
         Millennium.ready()
 
     def _unload(self):
-        logger.log("unloading ProtonDB plugin")
-        try:
-            if CSS_ID:
-                Millennium.remove_browser_css(CSS_ID)
-        except Exception:
-            pass
-
+        logger.log("unloading")
